@@ -70,9 +70,9 @@
         <!-- Color sample column -->
         <StackPanel Grid.Row="0" Grid.RowSpan="4" Grid.Column="2" Spacing="8">
             <TextBlock Text="Color Sample" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-            <Border x:Name="ColorSampleBorder" Width="110" Height="110" CornerRadius="4" BorderThickness="1"
+            <Border x:Name="ColorSampleBorder" Width="112" Height="112" CornerRadius="4" BorderThickness="1"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
-                <canvas:CanvasControl x:Name="ColorSampleCanvas" Draw="ColorSampleCanvas_Draw" Width="110" Height="110"/>
+                <canvas:CanvasControl x:Name="ColorSampleCanvas" Draw="ColorSampleCanvas_Draw"/>
             </Border>
             <StackPanel Orientation="Horizontal" Spacing="4">
                 <Button x:Name="EditButton" Content="Edit" IsEnabled="False" Click="EditButton_Click" HorizontalAlignment="Stretch"/>
@@ -83,9 +83,9 @@
         <!-- Zoom panel column -->
         <StackPanel Grid.Row="0" Grid.RowSpan="4" Grid.Column="4" Spacing="8">
             <TextBlock Text="x10 Zoom" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-            <Border Width="110" Height="110" CornerRadius="4" BorderThickness="1"
+            <Border Width="112" Height="112" CornerRadius="4" BorderThickness="1"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
-                <canvas:CanvasControl x:Name="ZoomCanvas" Draw="ZoomCanvas_Draw" Width="110" Height="110"/>
+                <canvas:CanvasControl x:Name="ZoomCanvas" Draw="ZoomCanvas_Draw"/>
             </Border>
         </StackPanel>
 

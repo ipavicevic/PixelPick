@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.Graphics.Canvas;
@@ -19,7 +19,7 @@ public sealed partial class MainWindow : Window
     private const string UnfreezeText = "Ctrl + / to unfreeze...";
     private const int ZoomPanelSize = 110;
     private const int ZoomScale = 10;
-    private const int ZoomCaptureSize = ZoomPanelSize / ZoomScale + 1; // 11
+    private const int ZoomCaptureSize = ZoomPanelSize / ZoomScale; // 11 - 11x10 fills panel exactly
 
     private bool _capturing = true;
     private bool _ctrl = false;
@@ -50,6 +50,7 @@ public sealed partial class MainWindow : Window
         presenter.IsMinimizable = false;
         AppWindow.SetPresenter(presenter);
         AppWindow.Title = "PixelPick";
+        AppWindow.SetIcon(System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", "icon.ico"));
 
         bool sized = false;
         Activated += (s, e) =>
@@ -216,6 +217,7 @@ public sealed partial class MainWindow : Window
         if (pixels == null) return;
 
         var ds = args.DrawingSession;
+        ds.Antialiasing = Microsoft.Graphics.Canvas.CanvasAntialiasing.Aliased;
         float w = (float)sender.ActualWidth;
         float h = (float)sender.ActualHeight;
         float scale = Math.Min(w, h) / ZoomCaptureSize;
@@ -243,21 +245,25 @@ public sealed partial class MainWindow : Window
             }
         }
 
-        // Crosshair
+        // Crosshair — derive from same snapped grid as pixel drawing
         int centerIdx = (ZoomCaptureSize / 2 * ZoomCaptureSize + ZoomCaptureSize / 2) * 4;
         byte cb = pixels[centerIdx], cg = pixels[centerIdx + 1], cr = pixels[centerIdx + 2];
         float brightness = (0.299f * cr + 0.587f * cg + 0.114f * cb) / 255f;
         Color penColor = brightness > 0.5f ? Colors.Black : Colors.White;
 
-        float cx = panelCx - scale / 2;
-        float cy = panelCy - scale / 2;
+        int half = ZoomCaptureSize / 2;
+        float cx0 = MathF.Round(imgX + half * scale);
+        float cy0 = MathF.Round(imgY + half * scale);
+        float cx1 = MathF.Round(imgX + (half + 1) * scale);
+        float cy1 = MathF.Round(imgY + (half + 1) * scale);
+        float lineX = MathF.Round((cx0 + cx1) / 2f);
+        float lineY = MathF.Round((cy0 + cy1) / 2f);
 
-        ds.DrawLine(0, panelCy, cx, panelCy, penColor);
-        ds.DrawLine(cx + scale, panelCy, w, panelCy, penColor);
-        ds.DrawLine(panelCx, 0, panelCx, cy, penColor);
-        ds.DrawLine(panelCx, cy + scale, panelCx, h, penColor);
-        // Inset by 0.5 so 1px stroke stays inside the center pixel block
-        ds.DrawRectangle(cx + 0.5f, cy + 0.5f, scale - 1, scale - 1, penColor);
+        ds.DrawLine(0, lineY, cx0, lineY, penColor);
+        ds.DrawLine(cx1, lineY, w, lineY, penColor);
+        ds.DrawLine(lineX, 0, lineX, cy0, penColor);
+        ds.DrawLine(lineX, cy1, lineX, h, penColor);
+        ds.DrawRectangle(cx0, cy0, cx1 - cx0, cy1 - cy0, penColor);
     }
 
     private async void CopyToClipboard(TextBox box, string value)
