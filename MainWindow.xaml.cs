@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using Microsoft.UI;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Windows.ApplicationModel.DataTransfer;
@@ -37,7 +38,30 @@ public sealed partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        SetupWindow();
         SetupHooks();
+    }
+
+    private void SetupWindow()
+    {
+        var presenter = OverlappedPresenter.Create();
+        presenter.IsResizable = false;
+        presenter.IsMaximizable = false;
+        presenter.IsMinimizable = false;
+        AppWindow.SetPresenter(presenter);
+        AppWindow.Title = "PixelPick";
+
+        bool sized = false;
+        Activated += (s, e) =>
+        {
+            if (sized) return;
+            sized = true;
+            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+            float dpiScale = NativeMethods.GetDpiForWindow(hwnd) / 96f;
+            AppWindow.Resize(new Windows.Graphics.SizeInt32(
+                (int)Math.Ceiling(RootGrid.Width * dpiScale),
+                (int)Math.Ceiling(RootGrid.Height * dpiScale) + AppWindow.TitleBar.Height));
+        };
     }
 
     private void SetupHooks()
@@ -66,7 +90,9 @@ public sealed partial class MainWindow : Window
         if ((int)wParam == NativeMethods.WM_KEYDOWN)
         {
             var ki = (NativeMethods.KEYBOARDHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(NativeMethods.KEYBOARDHOOKSTRUCT))!;
-            if (ki.vkCode == NativeMethods.VK_CONTROL)
+            if (ki.vkCode == NativeMethods.VK_CONTROL ||
+                ki.vkCode == NativeMethods.VK_LCONTROL ||
+                ki.vkCode == NativeMethods.VK_RCONTROL)
             {
                 _ctrl = true;
             }
@@ -84,7 +110,9 @@ public sealed partial class MainWindow : Window
         else if ((int)wParam == NativeMethods.WM_KEYUP)
         {
             var ki = (NativeMethods.KEYBOARDHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(NativeMethods.KEYBOARDHOOKSTRUCT))!;
-            if (ki.vkCode == NativeMethods.VK_CONTROL)
+            if (ki.vkCode == NativeMethods.VK_CONTROL ||
+                ki.vkCode == NativeMethods.VK_LCONTROL ||
+                ki.vkCode == NativeMethods.VK_RCONTROL)
                 _ctrl = false;
         }
         return NativeMethods.CallNextHookEx(_hKeyboardHook, nCode, wParam, lParam);
@@ -188,13 +216,15 @@ public sealed partial class MainWindow : Window
         if (pixels == null) return;
 
         var ds = args.DrawingSession;
-        const float scale = ZoomScale;
-        float panelCx = ZoomPanelSize / 2.0f;
-        float panelCy = ZoomPanelSize / 2.0f;
+        float w = (float)sender.ActualWidth;
+        float h = (float)sender.ActualHeight;
+        float scale = Math.Min(w, h) / ZoomCaptureSize;
+        float panelCx = w / 2.0f;
+        float panelCy = h / 2.0f;
         float imgX = panelCx - (ZoomCaptureSize / 2.0f) * scale;
         float imgY = panelCy - (ZoomCaptureSize / 2.0f) * scale;
 
-        // Draw each captured pixel as a scaled rectangle
+        // Draw each captured pixel as a scaled rectangle, snapping to integer boundaries
         for (int py = 0; py < ZoomCaptureSize; py++)
         {
             for (int px = 0; px < ZoomCaptureSize; px++)
@@ -204,7 +234,11 @@ public sealed partial class MainWindow : Window
                 byte pg = pixels[idx + 1];
                 byte pr = pixels[idx + 2];
                 var c = Color.FromArgb(255, pr, pg, pb);
-                ds.FillRectangle(imgX + px * scale, imgY + py * scale, scale, scale,
+                float x0 = MathF.Round(imgX + px * scale);
+                float y0 = MathF.Round(imgY + py * scale);
+                float x1 = MathF.Round(imgX + (px + 1) * scale);
+                float y1 = MathF.Round(imgY + (py + 1) * scale);
+                ds.FillRectangle(x0, y0, x1 - x0, y1 - y0,
                     new Microsoft.Graphics.Canvas.Brushes.CanvasSolidColorBrush(sender, c));
             }
         }
@@ -218,11 +252,12 @@ public sealed partial class MainWindow : Window
         float cx = panelCx - scale / 2;
         float cy = panelCy - scale / 2;
 
-        ds.DrawLine(0, panelCy, cx - 1, panelCy, penColor);
-        ds.DrawLine(cx + scale, panelCy, ZoomPanelSize, panelCy, penColor);
-        ds.DrawLine(panelCx, 0, panelCx, cy - 1, penColor);
-        ds.DrawLine(panelCx, cy + scale, panelCx, ZoomPanelSize, penColor);
-        ds.DrawRectangle(cx, cy, scale, scale, penColor);
+        ds.DrawLine(0, panelCy, cx, panelCy, penColor);
+        ds.DrawLine(cx + scale, panelCy, w, panelCy, penColor);
+        ds.DrawLine(panelCx, 0, panelCx, cy, penColor);
+        ds.DrawLine(panelCx, cy + scale, panelCx, h, penColor);
+        // Inset by 0.5 so 1px stroke stays inside the center pixel block
+        ds.DrawRectangle(cx + 0.5f, cy + 0.5f, scale - 1, scale - 1, penColor);
     }
 
     private async void CopyToClipboard(TextBox box, string value)
@@ -240,9 +275,38 @@ public sealed partial class MainWindow : Window
     private void CopyRgbButton_Click(object sender, RoutedEventArgs e) => CopyToClipboard(RgbValue, RgbValue.Text.Trim());
     private void CopyHslButton_Click(object sender, RoutedEventArgs e) => CopyToClipboard(HslValue, HslValue.Text.Trim());
 
+    private static uint[] _customColors = new uint[16];
+
     private void EditButton_Click(object sender, RoutedEventArgs e)
     {
-        // TODO: color picker dialog
+        var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+
+        uint initColor = (uint)(_currentColor.R | (_currentColor.G << 8) | (_currentColor.B << 16));
+
+        var custHandle = GCHandle.Alloc(_customColors, GCHandleType.Pinned);
+        try
+        {
+            var cc = new NativeMethods.CHOOSECOLOR
+            {
+                lStructSize  = Marshal.SizeOf<NativeMethods.CHOOSECOLOR>(),
+                hwndOwner    = hwnd,
+                rgbResult    = initColor,
+                lpCustColors = custHandle.AddrOfPinnedObject(),
+                Flags        = NativeMethods.CC_FULLOPEN | NativeMethods.CC_RGBINIT
+            };
+
+            if (NativeMethods.ChooseColor(ref cc))
+            {
+                byte r = (byte)(cc.rgbResult & 0xFF);
+                byte g = (byte)((cc.rgbResult >> 8) & 0xFF);
+                byte b = (byte)((cc.rgbResult >> 16) & 0xFF);
+                SetColor(Color.FromArgb(255, r, g, b));
+            }
+        }
+        finally
+        {
+            custHandle.Free();
+        }
     }
 
     private void RevertButton_Click(object sender, RoutedEventArgs e)

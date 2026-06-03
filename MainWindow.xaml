@@ -5,7 +5,7 @@
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
     Title="PixelPick">
 
-    <Grid x:Name="RootGrid" Padding="12">
+    <Grid x:Name="RootGrid" Padding="12" Width="490" Height="280">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -69,20 +69,20 @@
 
         <!-- Color sample column -->
         <StackPanel Grid.Row="0" Grid.RowSpan="4" Grid.Column="2" Spacing="8">
-            <TextBlock Text="COLOR SAMPLE" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+            <TextBlock Text="Color Sample" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
             <Border x:Name="ColorSampleBorder" Width="110" Height="110" CornerRadius="4" BorderThickness="1"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
                 <canvas:CanvasControl x:Name="ColorSampleCanvas" Draw="ColorSampleCanvas_Draw" Width="110" Height="110"/>
             </Border>
             <StackPanel Orientation="Horizontal" Spacing="4">
-                <Button x:Name="EditButton" Content="EDIT" IsEnabled="False" Click="EditButton_Click" HorizontalAlignment="Stretch"/>
-                <Button x:Name="RevertButton" Content="REVERT" IsEnabled="False" Click="RevertButton_Click" HorizontalAlignment="Stretch"/>
+                <Button x:Name="EditButton" Content="Edit" IsEnabled="False" Click="EditButton_Click" HorizontalAlignment="Stretch"/>
+                <Button x:Name="RevertButton" Content="Revert" IsEnabled="False" Click="RevertButton_Click" HorizontalAlignment="Stretch"/>
             </StackPanel>
         </StackPanel>
 
         <!-- Zoom panel column -->
         <StackPanel Grid.Row="0" Grid.RowSpan="4" Grid.Column="4" Spacing="8">
-            <TextBlock Text="X10 ZOOM" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+            <TextBlock Text="x10 Zoom" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
             <Border Width="110" Height="110" CornerRadius="4" BorderThickness="1"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
                 <canvas:CanvasControl x:Name="ZoomCanvas" Draw="ZoomCanvas_Draw" Width="110" Height="110"/>
@@ -90,10 +90,15 @@
         </StackPanel>
 
         <!-- Status bar -->
-        <TextBlock x:Name="StatusText" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="5"
-                   Margin="0,16,0,0" Text="Ctrl + / to freeze..."
-                   Style="{ThemeResource CaptionTextBlockStyle}"
-                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                   HorizontalAlignment="Center"/>
+        <Border Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="5"
+                Margin="0,16,-12,-12" Padding="12,6"
+                Background="{ThemeResource LayerFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="0,1,0,0">
+            <TextBlock x:Name="StatusText" Text="Ctrl + / to freeze..."
+                       Style="{ThemeResource CaptionTextBlockStyle}"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                       HorizontalAlignment="Center"/>
+        </Border>
     </Grid>
 </Window>

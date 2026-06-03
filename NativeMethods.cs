@@ -9,7 +9,9 @@ internal static class NativeMethods
     public const int WH_KEYBOARD_LL = 13;
     public const int WM_KEYDOWN = 0x0100;
     public const int WM_KEYUP = 0x0101;
-    public const int VK_CONTROL = 0x11;
+    public const int VK_CONTROL  = 0x11;
+    public const int VK_LCONTROL = 0xA2;
+    public const int VK_RCONTROL = 0xA3;
     public const int VK_OEM_SLASH = 0xBF;
     public const uint SRCCOPY = 0x00CC0020;
 
@@ -19,6 +21,7 @@ internal static class NativeMethods
     [DllImport("user32.dll")] public static extern int UnhookWindowsHookEx(IntPtr idHook);
     [DllImport("user32.dll")] public static extern IntPtr CallNextHookEx(IntPtr idHook, int nCode, IntPtr wParam, IntPtr lParam);
     [DllImport("kernel32.dll")] public static extern IntPtr LoadLibrary(string lpFileName);
+    [DllImport("user32.dll")] public static extern uint GetDpiForWindow(IntPtr hWnd);
 
     [DllImport("user32.dll")] public static extern IntPtr GetDC(IntPtr hWnd);
     [DllImport("user32.dll")] public static extern int ReleaseDC(IntPtr hWnd, IntPtr hDC);
@@ -49,4 +52,24 @@ internal static class NativeMethods
 
     [StructLayout(LayoutKind.Sequential)]
     public struct BITMAPINFO { public BITMAPINFOHEADER bmiHeader; [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)] public uint[] bmiColors; }
+
+    // Classic Windows color picker dialog
+    public const uint CC_FULLOPEN = 0x0002;
+    public const uint CC_RGBINIT  = 0x0001;
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct CHOOSECOLOR
+    {
+        public int    lStructSize;
+        public IntPtr hwndOwner;
+        public IntPtr hInstance;
+        public uint   rgbResult;
+        public IntPtr lpCustColors;
+        public uint   Flags;
+        public IntPtr lCustData;
+        public IntPtr lpfnHook;
+        public IntPtr lpTemplateName;
+    }
+
+    [DllImport("comdlg32.dll")] public static extern bool ChooseColor(ref CHOOSECOLOR cc);
 }

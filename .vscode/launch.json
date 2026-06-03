@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug (x64)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-x64",
+            "program": "${workspaceFolder}/bin/x64/Debug/net8.0-windows10.0.19041.0/PixelPick.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            "console": "internalConsole"
+        }
+    ]
+}
