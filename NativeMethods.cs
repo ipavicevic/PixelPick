@@ -13,6 +13,7 @@ internal static class NativeMethods
     public const int VK_LCONTROL = 0xA2;
     public const int VK_RCONTROL = 0xA3;
     public const int VK_OEM_SLASH = 0xBF;
+    public const int VK_SPACE = 0x20;
     public const uint SRCCOPY = 0x00CC0020;
 
     public delegate IntPtr HookProcDelegate(int nCode, IntPtr wParam, IntPtr lParam);

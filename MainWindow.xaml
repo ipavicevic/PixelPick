@@ -95,7 +95,7 @@
                 Background="{ThemeResource LayerFillColorDefaultBrush}"
                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                 BorderThickness="0,1,0,0">
-            <TextBlock x:Name="StatusText" Text="Ctrl + / to freeze..."
+            <TextBlock x:Name="StatusText" Text="Ctrl + Space to freeze..."
                        Style="{ThemeResource CaptionTextBlockStyle}"
                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                        HorizontalAlignment="Center"/>

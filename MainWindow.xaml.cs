@@ -14,8 +14,8 @@ namespace PixelPick;
 
 public sealed partial class MainWindow : Window
 {
-    private const string FreezeText = "Ctrl + / to freeze...";
-    private const string UnfreezeText = "Ctrl + / to unfreeze...";
+    private const string FreezeText = "Ctrl + Space to freeze...";
+    private const string UnfreezeText = "Ctrl + Space to unfreeze...";
     private const int ZoomPanelSize = 110;
     private const int ZoomScale = 10;
     private const int ZoomCaptureSize = ZoomPanelSize / ZoomScale; // 11x10 fills panel exactly
@@ -98,7 +98,7 @@ public sealed partial class MainWindow : Window
             {
                 _ctrl = true;
             }
-            else if (ki.vkCode == NativeMethods.VK_OEM_SLASH && _ctrl)
+            else if (ki.vkCode == NativeMethods.VK_SPACE && _ctrl)
             {
                 _capturing = !_capturing;
                 DispatcherQueue.TryEnqueue(() =>
