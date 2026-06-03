@@ -4,7 +4,7 @@
         {
             "label": "build-x64",
             "type": "shell",
-            "command": "dotnet build -p:Platform=x64 -p:RuntimeIdentifier=win-x64",
+            "command": "dotnet build -p:Platform=x64",
             "group": {
                 "kind": "build",
                 "isDefault": true
