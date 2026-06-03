@@ -23,6 +23,7 @@ internal static class NativeMethods
     [DllImport("kernel32.dll")] public static extern IntPtr LoadLibrary(string lpFileName);
     [DllImport("user32.dll")] public static extern uint GetDpiForWindow(IntPtr hWnd);
 
+    [DllImport("user32.dll")] public static extern bool GetCursorPos(out POINT lpPoint);
     [DllImport("user32.dll")] public static extern IntPtr GetDC(IntPtr hWnd);
     [DllImport("user32.dll")] public static extern int ReleaseDC(IntPtr hWnd, IntPtr hDC);
     [DllImport("gdi32.dll")] public static extern IntPtr CreateCompatibleDC(IntPtr hDC);
