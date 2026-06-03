@@ -6,7 +6,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build-x64",
-            "program": "${workspaceFolder}/bin/x64/Debug/net8.0-windows10.0.19041.0/PixelPick.exe",
+            "program": "${workspaceFolder}/bin/Debug/net8.0-windows10.0.19041.0/PixelPick.exe",
             "args": [],
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
