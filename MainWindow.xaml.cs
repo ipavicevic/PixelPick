@@ -103,9 +103,25 @@ public sealed partial class MainWindow : Window
             {
                 _ctrl = true;
             }
+            else if (_capturing &&
+                     (ki.vkCode == NativeMethods.VK_LEFT  ||
+                      ki.vkCode == NativeMethods.VK_RIGHT ||
+                      ki.vkCode == NativeMethods.VK_UP    ||
+                      ki.vkCode == NativeMethods.VK_DOWN))
+            {
+                if (NativeMethods.GetCursorPos(out var pt))
+                {
+                    int dx = ki.vkCode == NativeMethods.VK_LEFT ? -1 : ki.vkCode == NativeMethods.VK_RIGHT ? 1 : 0;
+                    int dy = ki.vkCode == NativeMethods.VK_UP   ? -1 : ki.vkCode == NativeMethods.VK_DOWN  ? 1 : 0;
+                    NativeMethods.SetCursorPos(pt.x + dx, pt.y + dy);
+                    CaptureAt(pt.x + dx, pt.y + dy);
+                }
+            }
             else if (ki.vkCode == NativeMethods.VK_SPACE && _ctrl)
             {
                 _capturing = !_capturing;
+                if (_capturing && NativeMethods.GetCursorPos(out var pt))
+                    CaptureAt(pt.x, pt.y);
                 DispatcherQueue.TryEnqueue(() =>
                 {
                     EditButton.IsEnabled = !_capturing;
@@ -159,7 +175,11 @@ public sealed partial class MainWindow : Window
             _zoomPixels = pixels;
 
         _originalColor = color;
-        DispatcherQueue.TryEnqueue(() => SetColor(color));
+        DispatcherQueue.TryEnqueue(() =>
+        {
+            CoordText.Text = $"{x}, {y}";
+            SetColor(color);
+        });
     }
 
     private void SetColor(Color color)

@@ -101,6 +101,10 @@
                             BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
                         <canvas:CanvasControl x:Name="ZoomCanvas" Draw="ZoomCanvas_Draw"/>
                     </Border>
+                    <TextBlock x:Name="CoordText" Text="0, 0"
+                               FontFamily="Consolas" FontSize="12"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               HorizontalAlignment="Center"/>
                 </StackPanel>
             </Border>
 
