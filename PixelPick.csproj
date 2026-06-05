@@ -16,6 +16,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>PixelPick</AssemblyName>
     <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
+    <Company>Ivan Pavicevic</Company>
+    <Product>PixelPick</Product>
+    <Description>Pixel color picker for Windows</Description>
+    <Copyright>© 2026 Ivan Pavićević</Copyright>
+    <NeutralLanguage>en</NeutralLanguage>
+    <Version>1.0.0</Version>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
   </PropertyGroup>
 
   <ItemGroup>

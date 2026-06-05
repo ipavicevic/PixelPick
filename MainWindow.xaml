@@ -116,6 +116,10 @@
                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                 BorderThickness="0,1,0,0">
             <Grid>
+                <TextBlock x:Name="VersionText"
+                           Style="{ThemeResource CaptionTextBlockStyle}"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           HorizontalAlignment="Left" VerticalAlignment="Center"/>
                 <TextBlock x:Name="StatusText" Text="Ctrl + Space to freeze..."
                            Style="{ThemeResource CaptionTextBlockStyle}"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"

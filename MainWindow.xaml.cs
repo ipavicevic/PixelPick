@@ -61,8 +61,10 @@ public sealed partial class MainWindow : Window
         _hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
         NativeMethods.ShowWindow(_hwnd, NativeMethods.SW_HIDE);
 
+        var version = System.Reflection.Assembly.GetEntryAssembly()!.GetName().Version!;
         RootGrid.Loaded += (s, e) =>
         {
+            VersionText.Text = $"{version.Major}.{version.Minor}.{version.Build}";
             float dpiScale = NativeMethods.GetDpiForWindow(_hwnd) / 96f;
             NativeMethods.GetWindowRect(_hwnd, out var winRect);
             NativeMethods.GetClientRect(_hwnd, out var clientRect);
