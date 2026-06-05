@@ -50,19 +50,24 @@ public sealed partial class MainWindow : Window
         presenter.IsMinimizable = false;
         presenter.IsAlwaysOnTop = true;
         AppWindow.SetPresenter(presenter);
+
         AppWindow.Title = "PixelPick";
         AppWindow.SetIcon(System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", "icon.ico"));
 
-        bool sized = false;
-        Activated += (s, e) =>
+        var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+        NativeMethods.ShowWindow(hwnd, NativeMethods.SW_HIDE);
+
+        RootGrid.Loaded += (s, e) =>
         {
-            if (sized) return;
-            sized = true;
-            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
             float dpiScale = NativeMethods.GetDpiForWindow(hwnd) / 96f;
-            AppWindow.Resize(new Windows.Graphics.SizeInt32(
-                (int)Math.Ceiling(RootGrid.Width * dpiScale),
-                (int)Math.Ceiling(RootGrid.Height * dpiScale) + AppWindow.TitleBar.Height));
+            NativeMethods.GetWindowRect(hwnd, out var winRect);
+            NativeMethods.GetClientRect(hwnd, out var clientRect);
+            int frameW = (winRect.right - winRect.left) - clientRect.right;
+            int frameH = (winRect.bottom - winRect.top) - clientRect.bottom;
+            int contentW = (int)Math.Ceiling(CardsPanel.ActualWidth * dpiScale);
+            int contentH = (int)Math.Ceiling(RootGrid.ActualHeight * dpiScale);
+            AppWindow.Resize(new Windows.Graphics.SizeInt32(contentW + frameW, contentH + frameH));
+            NativeMethods.ShowWindow(hwnd, NativeMethods.SW_SHOW);
         };
     }
 
