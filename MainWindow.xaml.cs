@@ -17,8 +17,8 @@ public sealed partial class MainWindow : Window
     private const string FreezeText = "Ctrl + Space to freeze...";
     private const string UnfreezeText = "Ctrl + Space to unfreeze...";
     private const int ZoomPanelSize = 110;
-    private const int ZoomScale = 10;
-    private const int ZoomCaptureSize = ZoomPanelSize / ZoomScale; // 11x10 fills panel exactly
+    private int _zoomScale = 10;
+    private int ZoomCaptureSize => ZoomPanelSize / _zoomScale;
 
     private bool _capturing = true;
     private bool _ctrl = false;
@@ -103,6 +103,21 @@ public sealed partial class MainWindow : Window
             {
                 _ctrl = true;
             }
+            else if (_ctrl &&
+                     (ki.vkCode == NativeMethods.VK_UP || ki.vkCode == NativeMethods.VK_DOWN))
+            {
+                int newScale = Math.Clamp(_zoomScale + (ki.vkCode == NativeMethods.VK_UP ? 1 : -1), 5, 15);
+                if (newScale != _zoomScale)
+                {
+                    _zoomScale = newScale;
+                    lock (_zoomLock)
+                        _zoomPixels = null;
+                    if (NativeMethods.GetCursorPos(out var pt))
+                        CaptureAt(pt.x, pt.y);
+                    DispatcherQueue.TryEnqueue(() => ZoomLabel.Text = $"Zoom ×{_zoomScale}");
+                }
+                return (IntPtr)1;
+            }
             else if (_capturing &&
                      (ki.vkCode == NativeMethods.VK_LEFT  ||
                       ki.vkCode == NativeMethods.VK_RIGHT ||
@@ -116,6 +131,7 @@ public sealed partial class MainWindow : Window
                     NativeMethods.SetCursorPos(pt.x + dx, pt.y + dy);
                     CaptureAt(pt.x + dx, pt.y + dy);
                 }
+                return (IntPtr)1;
             }
             else if (ki.vkCode == NativeMethods.VK_SPACE && _ctrl)
             {
@@ -326,4 +342,5 @@ public sealed partial class MainWindow : Window
     {
         SetColor(_originalColor);
     }
+
 }
