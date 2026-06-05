@@ -25,6 +25,7 @@ public sealed partial class MainWindow : Window
     private Color _currentColor = Colors.White;
     private Color _originalColor = Colors.White;
 
+    private IntPtr _hwnd;
     private IntPtr _hMouseHook;
     private IntPtr _hKeyboardHook;
     private NativeMethods.HookProcDelegate? _mouseHook;
@@ -57,20 +58,20 @@ public sealed partial class MainWindow : Window
         if (Microsoft.UI.Composition.SystemBackdrops.DesktopAcrylicController.IsSupported())
             SystemBackdrop = new Microsoft.UI.Xaml.Media.DesktopAcrylicBackdrop();
 
-        var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
-        NativeMethods.ShowWindow(hwnd, NativeMethods.SW_HIDE);
+        _hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+        NativeMethods.ShowWindow(_hwnd, NativeMethods.SW_HIDE);
 
         RootGrid.Loaded += (s, e) =>
         {
-            float dpiScale = NativeMethods.GetDpiForWindow(hwnd) / 96f;
-            NativeMethods.GetWindowRect(hwnd, out var winRect);
-            NativeMethods.GetClientRect(hwnd, out var clientRect);
+            float dpiScale = NativeMethods.GetDpiForWindow(_hwnd) / 96f;
+            NativeMethods.GetWindowRect(_hwnd, out var winRect);
+            NativeMethods.GetClientRect(_hwnd, out var clientRect);
             int frameW = (winRect.right - winRect.left) - clientRect.right;
             int frameH = (winRect.bottom - winRect.top) - clientRect.bottom;
             int contentW = (int)Math.Ceiling(CardsPanel.ActualWidth * dpiScale);
             int contentH = (int)Math.Ceiling(RootGrid.ActualHeight * dpiScale);
             AppWindow.Resize(new Windows.Graphics.SizeInt32(contentW + frameW, contentH + frameH));
-            NativeMethods.ShowWindow(hwnd, NativeMethods.SW_SHOW);
+            NativeMethods.ShowWindow(_hwnd, NativeMethods.SW_SHOW);
         };
     }
 
@@ -90,7 +91,9 @@ public sealed partial class MainWindow : Window
         if (_capturing)
         {
             var hs = (NativeMethods.MOUSEHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(NativeMethods.MOUSEHOOKSTRUCT))!;
-            CaptureAt(hs.pt.x, hs.pt.y);
+            var hwndUnder = NativeMethods.GetAncestor(NativeMethods.WindowFromPoint(hs.pt), NativeMethods.GA_ROOT);
+            if (hwndUnder != _hwnd)
+                CaptureAt(hs.pt.x, hs.pt.y);
         }
         return NativeMethods.CallNextHookEx(_hMouseHook, nCode, wParam, lParam);
     }
@@ -314,7 +317,6 @@ public sealed partial class MainWindow : Window
 
     private void EditButton_Click(object sender, RoutedEventArgs e)
     {
-        var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
         uint initColor = (uint)(_currentColor.R | (_currentColor.G << 8) | (_currentColor.B << 16));
         var custHandle = GCHandle.Alloc(_customColors, GCHandleType.Pinned);
         try
@@ -322,7 +324,7 @@ public sealed partial class MainWindow : Window
             var cc = new NativeMethods.CHOOSECOLOR
             {
                 lStructSize  = Marshal.SizeOf<NativeMethods.CHOOSECOLOR>(),
-                hwndOwner    = hwnd,
+                hwndOwner    = _hwnd,
                 rgbResult    = initColor,
                 lpCustColors = custHandle.AddrOfPinnedObject(),
                 Flags        = NativeMethods.CC_FULLOPEN | NativeMethods.CC_RGBINIT

@@ -30,6 +30,9 @@ internal static class NativeMethods
 
     [DllImport("user32.dll")] public static extern bool GetCursorPos(out POINT lpPoint);
     [DllImport("user32.dll")] public static extern bool SetCursorPos(int x, int y);
+    [DllImport("user32.dll")] public static extern IntPtr WindowFromPoint(POINT point);
+    [DllImport("user32.dll")] public static extern IntPtr GetAncestor(IntPtr hwnd, uint gaFlags);
+    public const uint GA_ROOT = 2;
     [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
     public const int SW_HIDE = 0;
