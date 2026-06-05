@@ -14,6 +14,10 @@ internal static class NativeMethods
     public const int VK_RCONTROL = 0xA3;
     public const int VK_OEM_SLASH = 0xBF;
     public const int VK_SPACE = 0x20;
+    public const int VK_LEFT  = 0x25;
+    public const int VK_UP    = 0x26;
+    public const int VK_RIGHT = 0x27;
+    public const int VK_DOWN  = 0x28;
     public const uint SRCCOPY = 0x00CC0020;
 
     public delegate IntPtr HookProcDelegate(int nCode, IntPtr wParam, IntPtr lParam);
@@ -25,6 +29,7 @@ internal static class NativeMethods
     [DllImport("user32.dll")] public static extern uint GetDpiForWindow(IntPtr hWnd);
 
     [DllImport("user32.dll")] public static extern bool GetCursorPos(out POINT lpPoint);
+    [DllImport("user32.dll")] public static extern bool SetCursorPos(int x, int y);
     [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
     public const int SW_HIDE = 0;
