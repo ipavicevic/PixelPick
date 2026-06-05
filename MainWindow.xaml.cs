@@ -47,7 +47,7 @@ public sealed partial class MainWindow : Window
         var presenter = OverlappedPresenter.Create();
         presenter.IsResizable = false;
         presenter.IsMaximizable = false;
-        presenter.IsMinimizable = false;
+        presenter.IsMinimizable = true;
         presenter.IsAlwaysOnTop = true;
         AppWindow.SetPresenter(presenter);
 
@@ -341,6 +341,11 @@ public sealed partial class MainWindow : Window
     private void RevertButton_Click(object sender, RoutedEventArgs e)
     {
         SetColor(_originalColor);
+    }
+
+    private async void HelpButton_Click(object sender, RoutedEventArgs e)
+    {
+        await Windows.System.Launcher.LaunchUriAsync(new Uri("https://ipavicevic.github.io/PixelPick"));
     }
 
 }

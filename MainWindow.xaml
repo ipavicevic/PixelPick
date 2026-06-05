@@ -111,14 +111,22 @@
         </StackPanel>
 
         <!-- Status bar -->
-        <Border Grid.Row="1" Margin="0,12,0,0" Padding="12,6"
+        <Border Grid.Row="1" Margin="0,12,0,0" Padding="12,4"
                 Background="{ThemeResource LayerFillColorDefaultBrush}"
                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                 BorderThickness="0,1,0,0">
-            <TextBlock x:Name="StatusText" Text="Ctrl + Space to freeze..."
-                       Style="{ThemeResource CaptionTextBlockStyle}"
-                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                       HorizontalAlignment="Center"/>
+            <Grid>
+                <TextBlock x:Name="StatusText" Text="Ctrl + Space to freeze..."
+                           Style="{ThemeResource CaptionTextBlockStyle}"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Button HorizontalAlignment="Right" VerticalAlignment="Center"
+                        Style="{ThemeResource SubtleButtonStyle}"
+                        Padding="4" Click="HelpButton_Click">
+                    <FontIcon Glyph="&#xE946;" FontSize="13"
+                              Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                </Button>
+            </Grid>
         </Border>
     </Grid>
 </Window>
