@@ -5,93 +5,109 @@
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
     Title="PixelPick">
 
-    <Grid x:Name="RootGrid" Padding="12" Width="490" Height="280">
+    <Grid x:Name="RootGrid" HorizontalAlignment="Left" VerticalAlignment="Top">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="16"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="16"/>
-            <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
 
-        <!-- Color values column -->
-        <StackPanel Grid.Row="0" Grid.RowSpan="4" Grid.Column="0" Spacing="8">
+        <!-- Three cards -->
+        <StackPanel x:Name="CardsPanel" Grid.Row="0" Orientation="Horizontal" Spacing="12" Padding="12,12,12,0" HorizontalAlignment="Left">
 
-            <!-- RGB -->
-            <TextBlock Text="RGB" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <TextBox x:Name="RgbValue" Grid.Column="0" IsReadOnly="True" FontFamily="Consolas" FontSize="13"
-                         MinWidth="140" TextAlignment="Center"/>
-                <Button x:Name="CopyRgbButton" Grid.Column="1" Margin="4,0,0,0" Click="CopyRgbButton_Click">
-                    <FontIcon Glyph="&#xE8C8;" FontSize="14"/>
-                </Button>
-            </Grid>
+            <!-- Color values card -->
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1" CornerRadius="8" Padding="12">
+                <StackPanel Spacing="6">
 
-            <!-- HEX -->
-            <TextBlock Text="HEX" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <TextBox x:Name="HexValue" Grid.Column="0" IsReadOnly="True" FontFamily="Consolas" FontSize="13"
-                         MinWidth="140" TextAlignment="Center"/>
-                <Button x:Name="CopyHexButton" Grid.Column="1" Margin="4,0,0,0" Click="CopyHexButton_Click">
-                    <FontIcon Glyph="&#xE8C8;" FontSize="14"/>
-                </Button>
-            </Grid>
+                    <TextBlock Text="RGB" Style="{ThemeResource CaptionTextBlockStyle}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="RgbValue" Grid.Column="0" IsReadOnly="True"
+                                 FontFamily="Consolas" FontSize="14" MinWidth="148" TextAlignment="Center"/>
+                        <Button x:Name="CopyRgbButton" Grid.Column="1" Margin="4,0,0,0" Click="CopyRgbButton_Click">
+                            <FontIcon Glyph="&#xE8C8;" FontSize="13"/>
+                        </Button>
+                    </Grid>
 
-            <!-- HSL -->
-            <TextBlock Text="HSL" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <TextBox x:Name="HslValue" Grid.Column="0" IsReadOnly="True" FontFamily="Consolas" FontSize="13"
-                         MinWidth="140" TextAlignment="Center"/>
-                <Button x:Name="CopyHslButton" Grid.Column="1" Margin="4,0,0,0" Click="CopyHslButton_Click">
-                    <FontIcon Glyph="&#xE8C8;" FontSize="14"/>
-                </Button>
-            </Grid>
-        </StackPanel>
+                    <TextBlock Text="HEX" Style="{ThemeResource CaptionTextBlockStyle}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,4,0,0"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="HexValue" Grid.Column="0" IsReadOnly="True"
+                                 FontFamily="Consolas" FontSize="14" MinWidth="148" TextAlignment="Center"/>
+                        <Button x:Name="CopyHexButton" Grid.Column="1" Margin="4,0,0,0" Click="CopyHexButton_Click">
+                            <FontIcon Glyph="&#xE8C8;" FontSize="13"/>
+                        </Button>
+                    </Grid>
 
-        <!-- Color sample column -->
-        <StackPanel Grid.Row="0" Grid.RowSpan="4" Grid.Column="2" Spacing="8">
-            <TextBlock Text="Color Sample" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-            <Border x:Name="ColorSampleBorder" Width="112" Height="112" CornerRadius="4" BorderThickness="1"
-                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
-                <canvas:CanvasControl x:Name="ColorSampleCanvas" Draw="ColorSampleCanvas_Draw"/>
+                    <TextBlock Text="HSL" Style="{ThemeResource CaptionTextBlockStyle}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,4,0,0"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="HslValue" Grid.Column="0" IsReadOnly="True"
+                                 FontFamily="Consolas" FontSize="14" MinWidth="148" TextAlignment="Center"/>
+                        <Button x:Name="CopyHslButton" Grid.Column="1" Margin="4,0,0,0" Click="CopyHslButton_Click">
+                            <FontIcon Glyph="&#xE8C8;" FontSize="13"/>
+                        </Button>
+                    </Grid>
+
+                </StackPanel>
             </Border>
-            <StackPanel Orientation="Horizontal" Spacing="4">
-                <Button x:Name="EditButton" Content="Edit" IsEnabled="False" Click="EditButton_Click" HorizontalAlignment="Stretch"/>
-                <Button x:Name="RevertButton" Content="Revert" IsEnabled="False" Click="RevertButton_Click" HorizontalAlignment="Stretch"/>
-            </StackPanel>
-        </StackPanel>
 
-        <!-- Zoom panel column -->
-        <StackPanel Grid.Row="0" Grid.RowSpan="4" Grid.Column="4" Spacing="8">
-            <TextBlock Text="x10 Zoom" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-            <Border Width="112" Height="112" CornerRadius="4" BorderThickness="1"
-                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
-                <canvas:CanvasControl x:Name="ZoomCanvas" Draw="ZoomCanvas_Draw"/>
+            <!-- Color sample card -->
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1" CornerRadius="8" Padding="12">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Sample" Style="{ThemeResource CaptionTextBlockStyle}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <Border Width="112" Height="112" CornerRadius="4" BorderThickness="1"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+                        <canvas:CanvasControl x:Name="ColorSampleCanvas" Draw="ColorSampleCanvas_Draw"/>
+                    </Border>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="4"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button x:Name="EditButton" Grid.Column="0" Content="Edit"
+                                IsEnabled="False" HorizontalAlignment="Stretch" Click="EditButton_Click"/>
+                        <Button x:Name="RevertButton" Grid.Column="2" Content="Revert"
+                                IsEnabled="False" HorizontalAlignment="Stretch" Click="RevertButton_Click"/>
+                    </Grid>
+                </StackPanel>
             </Border>
+
+            <!-- Zoom card -->
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1" CornerRadius="8" Padding="12">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Zoom ×10" Style="{ThemeResource CaptionTextBlockStyle}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <Border Width="112" Height="112" CornerRadius="4" BorderThickness="1"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+                        <canvas:CanvasControl x:Name="ZoomCanvas" Draw="ZoomCanvas_Draw"/>
+                    </Border>
+                </StackPanel>
+            </Border>
+
         </StackPanel>
 
         <!-- Status bar -->
-        <Border Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="5"
-                Margin="0,16,-12,-12" Padding="12,6"
+        <Border Grid.Row="1" Margin="0,12,0,0" Padding="12,6"
                 Background="{ThemeResource LayerFillColorDefaultBrush}"
                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                 BorderThickness="0,1,0,0">

@@ -25,6 +25,12 @@ internal static class NativeMethods
     [DllImport("user32.dll")] public static extern uint GetDpiForWindow(IntPtr hWnd);
 
     [DllImport("user32.dll")] public static extern bool GetCursorPos(out POINT lpPoint);
+    [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+    public const int SW_HIDE = 0;
+    public const int SW_SHOW = 5;
+    [DllImport("user32.dll")] public static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+    [DllImport("user32.dll")] public static extern bool GetClientRect(IntPtr hWnd, out RECT lpRect);
     [DllImport("user32.dll")] public static extern IntPtr GetDC(IntPtr hWnd);
     [DllImport("user32.dll")] public static extern int ReleaseDC(IntPtr hWnd, IntPtr hDC);
     [DllImport("gdi32.dll")] public static extern IntPtr CreateCompatibleDC(IntPtr hDC);
@@ -37,6 +43,9 @@ internal static class NativeMethods
 
     [StructLayout(LayoutKind.Sequential)]
     public struct POINT { public int x, y; }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct RECT { public int left, top, right, bottom; }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct MOUSEHOOKSTRUCT { public POINT pt; public IntPtr hwnd; public uint wHitTestCode; public IntPtr dwExtraInfo; }
