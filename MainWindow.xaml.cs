@@ -54,6 +54,9 @@ public sealed partial class MainWindow : Window
         AppWindow.Title = "PixelPick";
         AppWindow.SetIcon(System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", "icon.ico"));
 
+        if (Microsoft.UI.Composition.SystemBackdrops.DesktopAcrylicController.IsSupported())
+            SystemBackdrop = new Microsoft.UI.Xaml.Media.DesktopAcrylicBackdrop();
+
         var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
         NativeMethods.ShowWindow(hwnd, NativeMethods.SW_HIDE);
 

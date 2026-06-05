@@ -5,7 +5,7 @@
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
     Title="PixelPick">
 
-    <Grid x:Name="RootGrid" HorizontalAlignment="Left" VerticalAlignment="Top">
+    <Grid x:Name="RootGrid" HorizontalAlignment="Left" VerticalAlignment="Top" Background="Transparent">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
