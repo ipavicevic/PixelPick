@@ -95,7 +95,7 @@
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1" CornerRadius="8" Padding="12">
                 <StackPanel Spacing="8">
-                    <TextBlock Text="Zoom ×10" Style="{ThemeResource CaptionTextBlockStyle}"
+                    <TextBlock x:Name="ZoomLabel" Text="Zoom ×10" Style="{ThemeResource CaptionTextBlockStyle}"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     <Border Width="112" Height="112" CornerRadius="4" BorderThickness="1"
                             BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
