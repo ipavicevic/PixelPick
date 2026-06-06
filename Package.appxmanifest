@@ -9,7 +9,7 @@
   <Identity
     Name="ipavicevic.PixelPick"
     Publisher="CN=53BA64DB-AB37-4AC8-A5FD-E1A2E5D8149A"
-    Version="1.0.0.0" />
+    Version="0.0.0.0" />
 
   <Properties>
     <DisplayName>PixelPick</DisplayName>

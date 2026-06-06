@@ -1,0 +1,81 @@
+name: Release
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  release:
+    runs-on: windows-2025
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '8.x'
+
+      - name: Extract version
+        id: version
+        shell: pwsh
+        run: |
+          $v = (Select-Xml -Path PixelPick.csproj -XPath '//Version').Node.InnerText
+          echo "value=$v" >> $env:GITHUB_OUTPUT
+          $parts = ($v -split '-')[0] -split '\.'
+          while ($parts.Count -lt 4) { $parts += '0' }
+          echo "msix=$($parts[0..3] -join '.')" >> $env:GITHUB_OUTPUT
+          echo "tag=v$v" >> $env:GITHUB_OUTPUT
+
+      - name: Skip if already released
+        id: check
+        shell: pwsh
+        run: |
+          $exists = git tag -l "${{ steps.version.outputs.tag }}"
+          if ($exists) {
+            echo "Tag ${{ steps.version.outputs.tag }} already exists — skipping release."
+            echo "skip=true" >> $env:GITHUB_OUTPUT
+          } else {
+            echo "skip=false" >> $env:GITHUB_OUTPUT
+          }
+
+      - name: Inject version into manifest
+        if: steps.check.outputs.skip == 'false'
+        shell: pwsh
+        run: |
+          (Get-Content Package.appxmanifest) `
+            -replace 'Version="0\.0\.0\.0"', 'Version="${{ steps.version.outputs.msix }}"' |
+            Set-Content Package.appxmanifest
+
+      - name: Publish MSIX
+        if: steps.check.outputs.skip == 'false'
+        shell: pwsh
+        run: |
+          dotnet publish PixelPick.csproj `
+            -c Release `
+            -p:Platform=x64 `
+            -p:GenerateAppxPackageOnBuild=true `
+            -p:AppxPackageSigningEnabled=false
+
+      - name: Locate MSIX
+        if: steps.check.outputs.skip == 'false'
+        id: msix
+        shell: pwsh
+        run: |
+          $msix = Get-ChildItem AppPackages -Recurse -Filter *.msix | Select-Object -First 1
+          echo "path=$($msix.FullName)" >> $env:GITHUB_OUTPUT
+          $dest = "PixelPick-${{ steps.version.outputs.tag }}.msix"
+          Copy-Item $msix.FullName $dest
+          echo "name=$dest" >> $env:GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        if: steps.check.outputs.skip == 'false'
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: PixelPick ${{ steps.version.outputs.tag }}
+          body: |
+            Upload `${{ steps.msix.outputs.name }}` to the Microsoft Store via Partner Center.
+          files: ${{ steps.msix.outputs.name }}
