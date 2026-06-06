@@ -14,8 +14,8 @@ namespace PixelPick;
 
 public sealed partial class MainWindow : Window
 {
-    private const string FreezeText = "Ctrl + Space to freeze...";
-    private const string UnfreezeText = "Ctrl + Space to unfreeze...";
+    private const string ActiveText = "Ctrl + Space to freeze...";
+    private const string FrozenText = "Ctrl + Space to unfreeze...";
     private const int ZoomPanelSize = 110;
     private int _zoomScale = 10;
     private int ZoomCaptureSize => ZoomPanelSize / _zoomScale;
@@ -150,7 +150,7 @@ public sealed partial class MainWindow : Window
                 {
                     EditButton.IsEnabled = !_capturing;
                     RevertButton.IsEnabled = !_capturing;
-                    StatusText.Text = _capturing ? FreezeText : UnfreezeText;
+                    StatusText.Text = _capturing ? ActiveText : FrozenText;
                 });
             }
         }
