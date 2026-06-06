@@ -59,6 +59,17 @@ jobs:
             -p:GenerateAppxPackageOnBuild=true `
             -p:AppxPackageSigningEnabled=false
 
+      - name: Sign MSIX
+        if: steps.check.outputs.skip == 'false'
+        shell: pwsh
+        run: |
+          $pfxBytes = [Convert]::FromBase64String("${{ secrets.SIGNING_CERT }}")
+          [IO.File]::WriteAllBytes("pixelpick.pfx", $pfxBytes)
+          $sdk = Get-ChildItem "C:\Program Files (x86)\Windows Kits\10\bin" -Directory |
+                 Where-Object { $_.Name -match '^\d' } | Sort-Object Name | Select-Object -Last 1
+          $msix = Get-ChildItem AppPackages -Recurse -Filter *.msix | Select-Object -First 1
+          & "$($sdk.FullName)\x64\signtool.exe" sign /fd sha256 /f pixelpick.pfx /p "${{ secrets.SIGNING_CERT_PASSWORD }}" $msix.FullName
+
       - name: Locate MSIX
         if: steps.check.outputs.skip == 'false'
         id: msix
