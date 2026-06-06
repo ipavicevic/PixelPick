@@ -11,8 +11,8 @@
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
-    <AppxPackageSigningEnabled>true</AppxPackageSigningEnabled>
-    <PackageCertificateThumbprint>107277C9A6141BC9B6C7DF5F1E50622BFBFA8C88</PackageCertificateThumbprint>
+    <AppxPackageSigningEnabled Condition="'$(CI)' != 'true'">true</AppxPackageSigningEnabled>
+    <PackageCertificateThumbprint Condition="'$(CI)' != 'true'">107277C9A6141BC9B6C7DF5F1E50622BFBFA8C88</PackageCertificateThumbprint>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>PixelPick</AssemblyName>

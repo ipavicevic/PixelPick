@@ -19,4 +19,4 @@ jobs:
           dotnet-version: '8.x'
 
       - name: Build
-        run: dotnet build PixelPick.csproj -c Debug -p:Platform=x64
+        run: dotnet build PixelPick.csproj -c Debug -p:Platform=x64 -p:AppxPackageSigningEnabled=false
