@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <clipPath id="rounded">
+      <rect width="256" height="256" rx="56" ry="56"/>
+    </clipPath>
+  </defs>
+
+  <!-- Pixel grid (5x5, each cell ~52px) -->
+  <g clip-path="url(#rounded)">
+
+    <!-- Row 0 -->
+    <rect x="0"     y="0"     width="52" height="52" fill="#7C5CBF"/>
+    <rect x="52"    y="0"     width="52" height="52" fill="#BF7A42"/>
+    <rect x="104"   y="0"     width="52" height="52" fill="#4288A8"/>
+    <rect x="156"   y="0"     width="52" height="52" fill="#52A85A"/>
+    <rect x="208"   y="0"     width="48" height="52" fill="#C06840"/>
+
+    <!-- Row 1 -->
+    <rect x="0"     y="52"    width="52" height="52" fill="#3EA888"/>
+    <rect x="52"    y="52"    width="52" height="52" fill="#9850C8"/>
+    <rect x="104"   y="52"    width="52" height="52" fill="#52B06A"/>
+    <rect x="156"   y="52"    width="52" height="52" fill="#C08850"/>
+    <rect x="208"   y="52"    width="48" height="52" fill="#4070C0"/>
+
+    <!-- Row 2 -->
+    <rect x="0"     y="104"   width="52" height="52" fill="#C07040"/>
+    <rect x="52"    y="104"   width="52" height="52" fill="#38A890"/>
+    <rect x="104"   y="104"   width="52" height="52" fill="#7858C0"/>
+    <rect x="156"   y="104"   width="52" height="52" fill="#3AA092"/>
+    <rect x="208"   y="104"   width="48" height="52" fill="#A87038"/>
+
+    <!-- Row 3 -->
+    <rect x="0"     y="156"   width="52" height="52" fill="#4078B8"/>
+    <rect x="52"    y="156"   width="52" height="52" fill="#C07058"/>
+    <rect x="104"   y="156"   width="52" height="52" fill="#58A850"/>
+    <rect x="156"   y="156"   width="52" height="52" fill="#A848A0"/>
+    <rect x="208"   y="156"   width="48" height="52" fill="#3E8850"/>
+
+    <!-- Row 4 -->
+    <rect x="0"     y="208"   width="52" height="48" fill="#7840B0"/>
+    <rect x="52"    y="208"   width="52" height="48" fill="#3E9860"/>
+    <rect x="104"   y="208"   width="52" height="48" fill="#B84830"/>
+    <rect x="156"   y="208"   width="52" height="48" fill="#4868B8"/>
+    <rect x="208"   y="208"   width="48" height="48" fill="#A89030"/>
+
+    <!-- Grid lines -->
+    <line x1="52"  y1="0" x2="52"  y2="256" stroke="rgba(0,0,0,0.15)" stroke-width="1"/>
+    <line x1="104" y1="0" x2="104" y2="256" stroke="rgba(0,0,0,0.15)" stroke-width="1"/>
+    <line x1="156" y1="0" x2="156" y2="256" stroke="rgba(0,0,0,0.15)" stroke-width="1"/>
+    <line x1="208" y1="0" x2="208" y2="256" stroke="rgba(0,0,0,0.15)" stroke-width="1"/>
+    <line x1="0" y1="52"  x2="256" y2="52"  stroke="rgba(0,0,0,0.15)" stroke-width="1"/>
+    <line x1="0" y1="104" x2="256" y2="104" stroke="rgba(0,0,0,0.15)" stroke-width="1"/>
+    <line x1="0" y1="156" x2="256" y2="156" stroke="rgba(0,0,0,0.15)" stroke-width="1"/>
+    <line x1="0" y1="208" x2="256" y2="208" stroke="rgba(0,0,0,0.15)" stroke-width="1"/>
+
+    <!-- Crosshair (center cell: 104,104 → 156,156, center 130,130) -->
+    <line x1="0"   y1="130" x2="104" y2="130" stroke="white" stroke-width="13" stroke-linecap="round"/>
+    <line x1="156" y1="130" x2="256" y2="130" stroke="white" stroke-width="13" stroke-linecap="round"/>
+    <line x1="130" y1="0"   x2="130" y2="104" stroke="white" stroke-width="13" stroke-linecap="round"/>
+    <line x1="130" y1="156" x2="130" y2="256" stroke="white" stroke-width="13" stroke-linecap="round"/>
+    <rect x="104" y="104" width="52" height="52" fill="none" stroke="white" stroke-width="13"/>
+
+  </g>
+</svg>
